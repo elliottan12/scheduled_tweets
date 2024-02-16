@@ -1,0 +1,37 @@
+services:
+  # Create a redis instance
+  - type: redis
+    name: sidekiq-redis
+    region: singapore
+    maxmemoryPolicy: noeviction
+    ipAllowList: []
+
+  # Let's create our background worker
+  - type: worker
+    name: sidekiq-worker
+    env: ruby
+    region: singapore
+    buildCommand: bundle install
+    startCommand: bundle exec sidekiq -r ./main.rb
+    autoDeploy: false
+    envVars:
+      - key: REDIS_URL
+        fromService:
+          type: redis
+          name: sidekiq-redis
+          property: connectionString
+
+  # Create the web server hosting sinatra
+  - type: web
+    name: scheduled_tweets
+    env: ruby
+    region: singapore
+    buildCommand: bundle install
+    startCommand: bundle exec ruby main.rb
+    autoDeploy: false
+    envVars:
+      - key: REDIS_URL
+        fromService:
+          type: redis
+          name: sidekiq-redis
+          property: connectionString
