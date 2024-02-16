@@ -38,6 +38,12 @@ class TweetsController < ApplicationController
         redirect_to tweets_path, notice: "Tweet was unscheduled"
     end
 
+    def publish
+        @tweet = Tweet.find(params[:id])
+        @tweet.publish_to_twitter!
+        redirect_to tweets_path, notice: "Tweet published successfully"
+    end
+
     private
 
     def tweet_params

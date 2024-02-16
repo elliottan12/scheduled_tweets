@@ -1,29 +1,35 @@
 <%= form_with model: tweet do |form| %>
-    <%= render "shared/form_errors", form: form %>
-  
-    <div class="mb-3">
-      <%= form.label :twitter_account_id %>
-      <%= form.collection_select :twitter_account_id, Current.user.twitter_accounts, :id, :username, {}, { class: "form-control" } %>
-      <%= link_to "Connect your Twitter Account", "/auth/twitter" %>
+  <%= render "shared/form_errors", form: form %>
+
+  <div class="mb-3">
+    <%= form.label :twitter_account_id %>
+    <%= form.collection_select :twitter_account_id, Current.user.twitter_accounts, :id, :username, {}, { class: "form-control" } %>
+    <%= link_to "Connect your Twitter Account", "/auth/twitter" %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :body %>
+    <%= form.text_area :body, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= form.label :publish_at %>
+    <div class="form-control">
+      <%= form.datetime_select :publish_at %>
     </div>
-  
-    <div class="mb-3">
-      <%= form.label :body %>
-      <%= form.text_area :body, class: "form-control" %>
-    </div>
-  
-    <div class="mb-3">
-      <%= form.label :publish_at %>
-      <div class="form-control">
-        <%= form.datetime_select :publish_at%>
-      </div>
-    </div>
-  
-    <%= form.button "Schedule", class: "btn btn-primary" %> 
+  </div>
+
+  <%= form.button "Schedule", class: "btn btn-primary" %> 
+<% end %>
+
+<% if tweet.persisted? %>
+  <%= button_to "Tweet Now", publish_tweet_path(tweet), method: :post, class: "btn btn-primary", style: "margin-top: 10px;" %>
+<% else %>
+  <%= button_to "Tweet Now", publish_tweet_path(tweet.id), method: :post, class: "btn btn-primary", style: "margin-top: 10px;" %>
 <% end %>
 
 <%# Comments: Placed the delete button outside the form so that it will not be a form within a form. %>
 <%# If I placed a link within a form, it somehow does not go to the delete route but the show route. %>
 <% if tweet.persisted? %>
-<%= button_to "Delete", tweet, method: :delete, class: "btn btn-outline-danger", style: "margin-top: 10px;", data: { turbo_method: "delete", turbo_confirm: "Are you sure?" } %>
+  <%= button_to "Delete", tweet, method: :delete, class: "btn btn-outline-danger", style: "margin-top: 10px;", data: { confirm: ("Are you sure?") } %>
 <% end %>
