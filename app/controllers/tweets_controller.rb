@@ -44,6 +44,12 @@ class TweetsController < ApplicationController
         redirect_to tweets_path, notice: "Tweet published successfully"
     end
 
+    def publish_new
+        @tweet = Tweet.new(tweet_params)
+        @tweet.publish_to_twitter!
+        redirect_to tweets_path, notice: "New tweet published successfully"
+    end
+
     private
 
     def tweet_params

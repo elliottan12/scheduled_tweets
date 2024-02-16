@@ -22,14 +22,9 @@
   <%= form.button "Schedule", class: "btn btn-primary" %> 
 <% end %>
 
-<% if tweet.persisted? %>
-  <%= button_to "Tweet Now", publish_tweet_path(tweet), method: :post, class: "btn btn-primary", style: "margin-top: 10px;" %>
-<% else %>
-  <%= button_to "Tweet Now", publish_tweet_path(tweet.id), method: :post, class: "btn btn-primary", style: "margin-top: 10px;" %>
-<% end %>
-
 <%# Comments: Placed the delete button outside the form so that it will not be a form within a form. %>
 <%# If I placed a link within a form, it somehow does not go to the delete route but the show route. %>
 <% if tweet.persisted? %>
+  <%= button_to "Tweet Now", publish_tweet_path(tweet), method: :post, class: "btn btn-primary", style: "margin-top: 10px;" %>
   <%= button_to "Delete", tweet, method: :delete, class: "btn btn-outline-danger", style: "margin-top: 10px;", data: { confirm: ("Are you sure?") } %>
 <% end %>
